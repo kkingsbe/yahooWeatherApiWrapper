@@ -192,6 +192,67 @@ public class yahooWeather {
                 .getJSONObject("atmosphere");
         return Integer.parseInt(Condition.getString("visibility"));
     }
+    public static String sunrise(String location){ //Time of todays sunrise
+        JsonNode jn = null;
+        try {
+            jn = Unirest
+                    .get(" https://query.yahooapis.com/v1/public/yql")
+                    .queryString("format", "json")
+                    .queryString("q", "select astronomy from weather.forecast where woeid in (select woeid from geo.places(1) where text=\""+location+"\")")
+                    .asJson()
+                    .getBody();
+        } catch (UnirestException e1) {
+            noInternetError();
+        }
+
+        org.json.JSONObject Condition = jn.getObject()
+                .getJSONObject("query")
+                .getJSONObject("results")
+                .getJSONObject("channel")
+                .getJSONObject("astronomy");
+        return Condition.getString("sunrise");
+    }
+    public static String sunset(String location){ //Time of todays sunset
+        JsonNode jn = null;
+        try {
+            jn = Unirest
+                    .get(" https://query.yahooapis.com/v1/public/yql")
+                    .queryString("format", "json")
+                    .queryString("q", "select astronomy from weather.forecast where woeid in (select woeid from geo.places(1) where text=\""+location+"\")")
+                    .asJson()
+                    .getBody();
+        } catch (UnirestException e1) {
+            noInternetError();
+        }
+
+        org.json.JSONObject Condition = jn.getObject()
+                .getJSONObject("query")
+                .getJSONObject("results")
+                .getJSONObject("channel")
+                .getJSONObject("astronomy");
+        return Condition.getString("sunset");
+    }
+    public static int currentTemp(String location){ //Current visibility in miles
+        JsonNode jn = null;
+        try {
+            jn = Unirest
+                    .get(" https://query.yahooapis.com/v1/public/yql")
+                    .queryString("format", "json")
+                    .queryString("q", "select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text=\""+location+"\")")
+                    .asJson()
+                    .getBody();
+        } catch (UnirestException e1) {
+            noInternetError();
+        }
+
+        org.json.JSONObject Condition = jn.getObject()
+                .getJSONObject("query")
+                .getJSONObject("results")
+                .getJSONObject("channel")
+                .getJSONObject("item")
+                .getJSONObject("condition");
+        return Integer.parseInt(Condition.getString("temp"));
+    }
     private static void noInternetError(){
         throw new java.lang.Error("No Internet Connection");
     }
