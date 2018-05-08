@@ -28,7 +28,29 @@ public class yahooWeather {
         return Condition.getString("text");
     }
 
+    public static int high(int day, String location){
+        JsonNode jn = null;
+        try {
+            jn = Unirest
+                    .get(" https://query.yahooapis.com/v1/public/yql")
+                    .queryString("format", "json")
+                    .queryString("q", "select item.forecast from weather.forecast where woeid in (select woeid from geo.places(1) where text=\""+location+"\")")
+                    .asJson()
+                    .getBody();
+        } catch (UnirestException e1) {
+            noInternetError();
+        }
+
+        org.json.JSONObject Condition = jn.getObject()
+                .getJSONObject("query")
+                .getJSONObject("results")
+                .getJSONArray("channel")
+                .getJSONObject(day)
+                .getJSONObject("item")
+                .getJSONObject("forecast");
+        return Integer.parseInt(Condition.getString("high"));
+    }
     private static void noInternetError(){
-        System.out.println("ERROR: No Internet Connection");
+        throw new java.lang.Error("No Internet Connection");
     }
 }
