@@ -1,4 +1,4 @@
-Forecasting Methods: \n
+Forecasting Methods:
 Most of the forecasting methods take integer day (0 = today, 1 = tomorrow, etc.) and string location ("Seattle, Washington") as arguments. Integer day has to equal the number of days into the future that you want to forecast.
 
 currentTemp(location):
